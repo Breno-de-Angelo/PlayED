@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Werror -Iinclude
 
 SRCDIR = src
 INCDIR = include
@@ -20,7 +20,10 @@ $(BINDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+debug: CFLAGS += -g -O0 -DDEBUG
+debug: $(BINDIR)/$(EXECUTABLE)
+
 clean:
 	rm -rf $(BINDIR)
 
-.PHONY: all clean
+.PHONY: all clean debug
