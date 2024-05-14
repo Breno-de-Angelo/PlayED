@@ -1,6 +1,12 @@
 #pragma once
+#include "list.h"
 
 typedef struct User User;
 
-User *create_user();
-void delete_user(User *user);
+User *user_create(char *nome);
+void user_delete(User *user);
+void user_print(User *user);
+void list_append_user(List *list, User *data);
+User *list_find_user(List *users_list, char *name);
+void user_add_friendship(User *user1, User *user2);
+void user_add_song(User *user, char *artist, char *song);
