@@ -1,5 +1,8 @@
 #include "list.h"
+#include "user.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct Node Node;
 struct Node
@@ -7,16 +10,16 @@ struct Node
     void *data;
     Node *next;
     Node *prev;
+    void (*print)(void*);
 };
 
 struct List
 {
     Node *first;
     Node *last;
-    size_t element_size;
 };
 
-List *create_list()
+List *list_create()
 {
     List *list = malloc(sizeof(List));
     list->first = NULL;
@@ -24,10 +27,11 @@ List *create_list()
     return list;
 }
 
-void append(List *list, void *data)
+void list_append(List *list, void *data, void (*print)(void*))
 {
     Node *node = malloc(sizeof(Node));
-    node->data = malloc(list->element_size);
+    node->data = data;
+    node->print = print;
     if (list->first == NULL)
     {
         // Empty list
@@ -41,7 +45,115 @@ void append(List *list, void *data)
     return;
 }
 
-void delete_list(List *list)
+void list_private_iterator(List *list, int function(Node *node, void *data), void *data)
 {
+    Node *p = list->first;
+    Node *aux = NULL;
+    while (p)
+    {
+        aux = p;
+        p = p->next;
+        if (function(aux, data))
+        {
+            return;
+        }
+    }
+}
+
+int list_delete_element(Node *node, void *data)
+{
+    (void) data;
+    free(node);
+    return 0;
+}
+
+void list_delete(List *list)
+{
+    list_private_iterator(list, list_delete_element, NULL);
     free(list);
 }
+
+int list_remove_element(Node *node, void *data)
+{
+    if (node->data == data)
+    {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        free(node);
+        return 1;
+    }
+    return 0;
+}
+
+void list_remove(List *list, void *data)
+{
+    if (list->first == NULL)
+    {
+        return;
+    }
+    if (list->first == list->last)
+    {
+        if (list->first->data == data)
+        {
+            free(list->first);
+            list->first = NULL;
+            list->last = NULL;
+            return;
+        }
+        return;
+    }
+    if (list->first->data == data)
+    {
+        list->first = list->first->next;
+        free(list->first->prev);
+        list->first->prev = NULL;
+        return;
+    }
+    if (list->last->data == data)
+    {
+        list->last = list->last->prev;
+        free(list->last->next);
+        list->last->next = NULL;
+        return;
+    }
+    list_private_iterator(list, list_remove_element, data);
+}
+
+int list_print_element(Node *node, void *data)
+{
+    node->print(node->data);
+    return 0;
+}
+
+void list_print(List *list)
+{
+    list_private_iterator(list, list_print_element, NULL);
+}
+
+void *list_iterator(List *list, void *function(void *element, void *data), void *data)
+{
+    Node *p = list->first;
+    Node *aux = NULL;
+    void *result;
+    while (p)
+    {
+        aux = p;
+        p = p->next;
+        result = function(aux->data, data);
+        if (result != NULL)
+        {
+            return result;
+        }
+    }
+}
+
+// void list_print_int(void *data)
+// {
+//     int value = *((int*) data);
+//     printf("Int Value: %d\n", value);
+// }
+
+// void list_append_int(List *list, int *data)
+// {
+//     list_append(list, data, list_print_int);
+// }
