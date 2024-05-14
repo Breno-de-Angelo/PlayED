@@ -1,5 +1,6 @@
 #include "list.h"
 #include "user.h"
+#include "song.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,27 +29,11 @@ void user_delete(User *user)
     free(user);
 }
 
-void user_print(User *user)
-{
-    printf("Name: %s\n", user->name);
-}
-
-void list_print_user(void *data)
-{
-    User *user = (User*) data;
-    user_print(user);
-}
-
-void list_append_user(List *list, User *data)
-{
-    list_append(list, data, list_print_user);
-}
-
 void *find_user(void *element, void *data)
 {
     User *user = (User *) element;
     char *name = (char *) data;
-    if (!strcpm(name, user->name))
+    if (!strcmp(name, user->name))
     {
         return user;
     }
@@ -63,11 +48,12 @@ User *list_find_user(List *users_list, char *name)
 
 void user_add_friendship(User *user1, User *user2)
 {
-    list_append_user(user1->friends, user2);
-    list_append_user(user2->friends, user1);
+    list_append(user1->friends, user2);
+    list_append(user2->friends, user1);
 }
 
 void user_add_song(User *user, char *artist, char *song)
 {
-    list_append_song(user->playlists, artist, song);
+    Song *new_song = song_create(artist, song);
+    list_append(user->playlists, new_song);
 }

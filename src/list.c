@@ -26,7 +26,7 @@ List *list_create()
     return list;
 }
 
-void list_append(List *list, void *data, void (*print)(void*))
+void list_append(List *list, void *data)
 {
     Node *node = malloc(sizeof(Node));
     node->data = data;
@@ -132,4 +132,5 @@ void *list_iterator(List *list, void *function(void *element, void *data), void 
             return result;
         }
     }
+    return NULL;
 }

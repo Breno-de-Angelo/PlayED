@@ -23,7 +23,7 @@ void read_friendship(char *path, List *users_list)
     while (token != NULL)
     {
         User *user = user_create(token);
-        list_append_user(users_list, user);
+        list_append(users_list, user);
         token = strtok(NULL, ";");
     }
 
@@ -58,13 +58,13 @@ void read_playlists(char *playlist_file_path, char* playlists_directory, User *u
         token = strtok(NULL, ";");
         while (token != NULL)
         {
-            user_add_playlist(user, token, playlists_directory);
+            read_playlist(user, token, playlists_directory);
         }
     }
     fclose(file);
 }
 
-void user_add_playlist(User *user, char *filename, char *playlists_directory)
+void read_playlist(User *user, char *filename, char *playlists_directory)
 {
     FILE *file;
     char *file_path;
@@ -83,7 +83,7 @@ void user_add_playlist(User *user, char *filename, char *playlists_directory)
     {
         token = strtok(buffer, "-");
         artist = token;
-        token = strtok(NULL, ";");
+        token = strtok(NULL, "\n");
         song = token;
         user_add_song(user, artist, song);
     }

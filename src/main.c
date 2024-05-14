@@ -1,4 +1,5 @@
 #include "user.h"
+#include "txt_io.h"
 #include <stdio.h>
 #include <string.h>
 
