@@ -10,7 +10,6 @@ struct Node
     void *data;
     Node *next;
     Node *prev;
-    void (*print)(void*);
 };
 
 struct List
@@ -31,7 +30,6 @@ void list_append(List *list, void *data, void (*print)(void*))
 {
     Node *node = malloc(sizeof(Node));
     node->data = data;
-    node->print = print;
     if (list->first == NULL)
     {
         // Empty list
@@ -119,17 +117,6 @@ void list_remove(List *list, void *data)
     list_private_iterator(list, list_remove_element, data);
 }
 
-int list_print_element(Node *node, void *data)
-{
-    node->print(node->data);
-    return 0;
-}
-
-void list_print(List *list)
-{
-    list_private_iterator(list, list_print_element, NULL);
-}
-
 void *list_iterator(List *list, void *function(void *element, void *data), void *data)
 {
     Node *p = list->first;
@@ -146,14 +133,3 @@ void *list_iterator(List *list, void *function(void *element, void *data), void 
         }
     }
 }
-
-// void list_print_int(void *data)
-// {
-//     int value = *((int*) data);
-//     printf("Int Value: %d\n", value);
-// }
-
-// void list_append_int(List *list, int *data)
-// {
-//     list_append(list, data, list_print_int);
-// }
