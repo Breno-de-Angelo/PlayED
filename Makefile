@@ -15,10 +15,10 @@ OBJS = $(SRCS:$(SRCDIR)/%.c=%.o)
 .DEFAULT_GOAL := release
 
 release: CFLAGS += $(RELEASE_FLAGS)
-release: $(RELEASE_BINDIR)/your_program
+release: $(RELEASE_BINDIR)/played
 
 debug: CFLAGS += $(DEBUG_FLAGS)
-debug: $(DEBUG_BINDIR)/your_program
+debug: $(DEBUG_BINDIR)/played
 
 clean:
 	rm -rf $(BINDIR)/*.o $(DEBUG_BINDIR)/*.o $(RELEASE_BINDIR)/*.o
@@ -31,8 +31,8 @@ $(RELEASE_BINDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(DEBUG_BINDIR)/your_program: $(addprefix $(DEBUG_BINDIR)/,$(OBJS))
+$(DEBUG_BINDIR)/played: $(addprefix $(DEBUG_BINDIR)/,$(OBJS))
 	$(CC) -o $@ $^ $(CFLAGS)
 
-$(RELEASE_BINDIR)/your_program: $(addprefix $(RELEASE_BINDIR)/,$(OBJS))
+$(RELEASE_BINDIR)/played: $(addprefix $(RELEASE_BINDIR)/,$(OBJS))
 	$(CC) -o $@ $^ $(CFLAGS)
