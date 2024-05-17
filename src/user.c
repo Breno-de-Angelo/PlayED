@@ -52,8 +52,20 @@ void user_add_friendship(User *user1, User *user2)
     list_append(user2->friends, user1);
 }
 
-void user_add_song(User *user, char *artist, char *song)
+void user_append_playlist(User *user, Playlist *playlist)
 {
-    Song *new_song = song_create(artist, song);
-    list_append(user->playlists, new_song);
+    list_append(user->playlists, playlist);
+}
+
+void *user_update_playlist(void *element, void *data)
+{
+    User *user = (User *) element;
+    user->playlists = list_playlist_update_by_artist(user->playlists);
+    return NULL;
+}
+
+void list_user_update_playlist(List *users_list)
+{
+    // For each user, update playlists to be by artist
+    list_iterator(users_list, user_update_playlist, NULL);
 }

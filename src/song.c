@@ -9,7 +9,6 @@ struct Song
     char *artist;
 };
 
-
 Song *song_create(char *artist, char *song_name)
 {
     Song *song = malloc(sizeof(Song));
@@ -23,4 +22,9 @@ void song_delete(Song *song)
     free(song->song);
     free(song->artist);
     free(song);
+}
+
+char *song_get_artist(Song *song)
+{
+    return song->artist;
 }
