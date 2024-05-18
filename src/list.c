@@ -124,22 +124,22 @@ int list_size(List *list)
     return list->length;
 }
 
-void *list_iterate(List *list, void *prev)
+void *list_iterate(List *list, void **prev)
 {
-    Node *prev_node = (Node *) prev;
+    Node *prev_node = (Node *) *prev;
     if (list->first == NULL)
     {
         return NULL;
     }
     if (prev_node == NULL)
     {
-        prev = list->first;
+        *prev = list->first;
         return list->first->data;
     }
     if (prev_node->next == NULL)
     {
         return NULL;
     }
-    prev = prev_node->next;
+    *prev = prev_node->next;
     return prev_node->next->data;
 }
