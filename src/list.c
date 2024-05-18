@@ -16,6 +16,7 @@ struct List
 {
     Node *first;
     Node *last;
+    int length;
 };
 
 List *list_create()
@@ -118,35 +119,27 @@ void list_remove(List *list, void *data)
     list_private_iterator(list, list_remove_element, data);
 }
 
-void *list_iterator(List *list, void *function(void *element, void *data), void *data)
-{
-    Node *p = list->first;
-    Node *aux = NULL;
-    void *result;
-    while (p)
-    {
-        aux = p;
-        p = p->next;
-        result = function(aux->data, data);
-        if (result != NULL)
-        {
-            return result;
-        }
-    }
-    return NULL;
-}
-
-void *list_size_count(void *element, void *data)
-{
-    (void) element;
-    int *counter = (int *) data;
-    (*counter)++;
-    return NULL;
-}
-
 int list_size(List *list)
 {
-    int counter = 0;
-    list_iterator(list, list_size_count, &counter);
-    return counter;
+    return list->length;
+}
+
+void *list_iterate(List *list, void *prev)
+{
+    Node *prev_node = (Node *) prev;
+    if (list->first == NULL)
+    {
+        return NULL;
+    }
+    if (prev_node == NULL)
+    {
+        prev = list->first;
+        return list->first->data;
+    }
+    if (prev_node->next == NULL)
+    {
+        return NULL;
+    }
+    prev = prev_node->next;
+    return prev_node->next->data;
 }

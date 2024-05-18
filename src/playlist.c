@@ -1,5 +1,4 @@
 #include "playlist.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -9,6 +8,16 @@ struct Playlist
     List *songs;
 };
 
+char *playlist_get_name(Playlist *playlist)
+{
+    return playlist->name;
+}
+
+List *playlist_get_songs(Playlist *playlist)
+{
+    return playlist->songs;
+}
+
 Playlist *playlist_create(char *name)
 {
     Playlist *playlist = malloc(sizeof(Playlist));
@@ -16,6 +25,11 @@ Playlist *playlist_create(char *name)
     playlist->songs = list_create();
     return playlist;
 }
+
+
+
+
+
 
 void playlist_append_song(Playlist *playlist, Song *song)
 {

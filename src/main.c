@@ -1,5 +1,5 @@
-#include "user.h"
-#include "txt_io.h"
+#include "list.h"
+#include "input.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -12,10 +12,10 @@ int main()
     char *playlist_file_path = "Facil/Entrada/playlists.txt";
     char *output_refactored_playlists_directory = "Saida/";
     char *output_refactored_list_file_path = "Saida/played-refatorada.txt";
-    // char *output_similarity_file_path = "../../Saida/similaridades.txt";
+    char *output_similarity_file_path = "Saida/similaridades.txt";
 
-    txt_read_friendship(friendship_file_path, users_list);
-    txt_read_playlists(playlist_file_path, playlists_directory, users_list);
+    read_friendship(friendship_file_path, users_list);
+    read_playlists(playlist_file_path, playlists_directory, users_list);
     
     #if DEBUG
     printf("User list size: %d\n", list_size(users_list));
