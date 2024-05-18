@@ -6,19 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
-#define CREATE_DIRECTORY(path) CreateDirectory(path, NULL)
-#define DIRECTORY_EXISTS_ERROR ERROR_ALREADY_EXISTS
-#else
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
-#define CREATE_DIRECTORY(path) mkdir(path, S_IRWXU)
-#define DIRECTORY_EXISTS_ERROR EEXIST
-#endif
-
 
 void write_songs(List *songs, FILE *output_file)
 {
@@ -34,20 +24,21 @@ void write_playlists(List *users_list, char *output_refactored_playlists_directo
 {
     void *prev_user = NULL;
     User *user = NULL;
+    char *output_dir_path = malloc(MAX_FILE_PATH);
+    char *output_file_path = malloc(MAX_FILE_PATH);
     while ((user = list_iterate(users_list, &prev_user)) != NULL)
     {
         char *user_name = user_get_name(user);
-        char *output_dir_path = malloc(MAX_FILE_PATH);
         sprintf(output_dir_path, "%s%s", output_refactored_playlists_directory, user_name);
         if (mkdir(output_dir_path, S_IRWXU))
         {
+            perror("Error creating directory");
             exit(1);
         }
 
         List *playlists = user_get_playlists(user);
         void *prev_playlist = NULL;
         Playlist *playlist = NULL;
-        char *output_file_path = malloc(MAX_FILE_PATH);
         while ((playlist = list_iterate(playlists, &prev_playlist)) != NULL)
         {
             char *playlist_name = playlist_get_name(playlist);
@@ -57,6 +48,8 @@ void write_playlists(List *users_list, char *output_refactored_playlists_directo
             fclose(output_file);
         }
     }
+    free(output_dir_path);
+    free(output_file_path);
 }
 
 void write_summary(List *users_list, char *output_summary_file_path)
@@ -144,5 +137,15 @@ void write_similarity(List *users_list, char *output_similarity_file_path)
         }
         list_append(visited_users, user);
     }
+    list_delete(visited_users);
     fclose(output_file);
+}
+
+void create_directory(char *path)
+{
+    if (mkdir(path, S_IRWXU))
+    {
+        perror("Error creating directory");
+        exit(1);
+    }
 }

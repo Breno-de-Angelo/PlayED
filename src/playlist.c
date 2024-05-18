@@ -26,3 +26,10 @@ Playlist *playlist_create(char *name)
     playlist->songs = list_create();
     return playlist;
 }
+
+void playlist_delete(Playlist *playlist)
+{
+    free(playlist->name);
+    list_delete(playlist->songs);
+    free(playlist);
+}

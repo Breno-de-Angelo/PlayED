@@ -46,6 +46,12 @@ void refactor_playlists(List *users_list)
                 list_append(playlist_get_songs(playlist_found), song);
             }
         }
+        void *prev_playlist_old = NULL;
+        Playlist *playlist_old = NULL;
+        while ((playlist_old = list_iterate(user_get_playlists(user), &prev_playlist_old)) != NULL)
+        {
+            playlist_delete(playlist_old);
+        }
         user_set_playlist(user, user_playlist);
     }
 }
@@ -171,4 +177,29 @@ void merge_playlists(List *users_list)
         merge_playlists_in_graph(graph);
     }
     list_delete(disjoint_graphs);
+}
+
+void list_destroy(List *users_list)
+{
+    void *prev_user = NULL;
+    User *user = NULL;
+    while ((user = list_iterate(users_list, &prev_user)) != NULL)
+    {
+        void *prev_playlist = NULL;
+        Playlist *playlist = NULL;
+        List *playlists = user_get_playlists(user);
+        while ((playlist = list_iterate(playlists, &prev_playlist)) != NULL)
+        {
+            void *prev_song = NULL;
+            Song *song = NULL;
+            List *songs = playlist_get_songs(playlist);
+            while ((song = list_iterate(songs, &prev_song)) != NULL)
+            {
+                song_delete(song);
+            }
+            playlist_delete(playlist);
+        }
+        user_delete(user);
+    }
+    list_delete(users_list);
 }
