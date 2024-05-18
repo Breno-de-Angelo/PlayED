@@ -46,5 +46,6 @@ void refactor_playlists(List *users_list)
                 list_append(playlist_get_songs(playlist_found), song);
             }
         }
+        user_set_playlist(user, user_playlist);
     }
 }

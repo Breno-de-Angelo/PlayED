@@ -9,3 +9,4 @@ char *user_get_name(User *user);
 List *user_get_playlists(User *user);
 List *user_get_friends(User *user);
 User *user_find_by_name(List *users_list, char *name);
+void user_set_playlist(User *user, List *playlist);

@@ -58,3 +58,9 @@ User *user_find_by_name(List *users_list, char *name)
     }
     return user;
 }
+
+void user_set_playlist(User *user, List *playlist)
+{
+    list_delete(user->playlists);
+    user->playlists = playlist;
+}

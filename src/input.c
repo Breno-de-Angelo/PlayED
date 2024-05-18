@@ -2,12 +2,8 @@
 #include "user.h"
 #include "song.h"
 #include "playlist.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_LINE_LENGTH 1000
-#define MAX_FILE_PATH 1000
 
 FILE *open_file(char *path, char *mode)
 {
@@ -74,6 +70,9 @@ void read_friendships(FILE *file, List *users_list)
             printf("User %s not found\n", token);
             exit(1);
         }
+
+        list_append(user_get_friends(user1), user2);
+        list_append(user_get_friends(user2), user1);
     }
 }
 
@@ -105,7 +104,7 @@ void read_playlist(List *list, char *playlists_directory, char *playlist_name)
         remove_trailing_character(token, ' ');
         artist = token;
         token = strtok_r(NULL, "\n", &saveptr);
-        song = token++;
+        song = ++token;
         list_append(playlist_get_songs(playlist), song_create(artist, song));
     }
     fclose(file);
@@ -136,4 +135,5 @@ void read_playlists(char *playlist_file_path, char* playlists_directory, List *u
             token = strtok_r(NULL, ";", &saveptr);
         }
     }
+    fclose(file);
 }
