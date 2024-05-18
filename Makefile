@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
-DEBUG_FLAGS = -g
+DEBUG_FLAGS = -g -DDEBUG
 RELEASE_FLAGS = -O3
 
 SRCDIR = src

@@ -91,10 +91,13 @@ void read_playlist(User *user, char *playlist_name, char *playlists_directory)
         if (token != NULL)
         {
             artist = token;
+            size_t len = strlen(artist);
+            artist[len - 1] = '\0';
             token = strtok_r(NULL, "\n", &saveptr);
             if (token != NULL)
             {
                 song_name = token;
+                song_name += 1;
                 Song *song = song_create(artist, song_name);
                 playlist_append_song(playlist, song);
             }

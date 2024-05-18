@@ -39,6 +39,7 @@ void list_append(List *list, void *data)
     }
     // Non-empty list
     node->prev = list->last;
+    node->next = NULL;
     list->last = list->last->next = node;
     return;
 }
@@ -133,4 +134,19 @@ void *list_iterator(List *list, void *function(void *element, void *data), void 
         }
     }
     return NULL;
+}
+
+void *list_size_count(void *element, void *data)
+{
+    (void) element;
+    int *counter = (int *) data;
+    (*counter)++;
+    return NULL;
+}
+
+int list_size(List *list)
+{
+    int counter = 0;
+    list_iterator(list, list_size_count, &counter);
+    return counter;
 }

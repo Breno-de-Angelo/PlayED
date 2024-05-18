@@ -1,4 +1,5 @@
 #include "playlist.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,6 +42,7 @@ void *list_playlists_append_song(void *element, void *data)
     if (!playlist_found)
     {
         Playlist *new_playlist = playlist_create(artist);
+        list_append(new_playlist->songs, song);
         list_append(new_list, new_playlist);
     }
     else
@@ -73,4 +75,22 @@ List *list_playlist_update_by_artist(List *list)
     list_iterator(list, playlist_update_by_artist, new_list);
     list_iterator(list, list_playlists_delete, NULL);
     return new_list;
+}
+
+char *playlist_get_name(Playlist *playlist)
+{
+    return playlist->name;
+}
+
+void *song_write_txt(void *element, void *data)
+{
+    Song *song = (Song *) element;
+    FILE *file = (FILE *) data;
+    fprintf(file, "%s - %s\n", song_get_artist(song), song_get_name(song));
+    return NULL;
+}
+
+void playlist_write_txt(Playlist *playlist, FILE *file)
+{
+    list_iterator(playlist->songs, song_write_txt, file);
 }

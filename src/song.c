@@ -28,3 +28,8 @@ char *song_get_artist(Song *song)
 {
     return song->artist;
 }
+
+char *song_get_name(Song *song)
+{
+    return song->song;
+}
