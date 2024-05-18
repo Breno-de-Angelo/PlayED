@@ -7,12 +7,12 @@
 int main()
 {
     List *users_list = list_create();
-    char *friendship_file_path = "/home/breno/ufes/PlayED/Facil/Entrada/amizade.txt";
-    char *playlists_directory = "/home/breno/ufes/PlayED/Facil/Entrada/";
-    char *playlist_file_path = "/home/breno/ufes/PlayED/Facil/Entrada/playlists.txt";
-    char *output_refactored_playlists_directory = "/home/breno/ufes/PlayED/Saida/";
-    char *output_refactored_list_file_path = "/home/breno/ufes/PlayED/Saida/played-refatorada.txt";
-    // char *output_similarity_file_path = "/home/breno/ufes/PlayED/Saida/similaridades.txt";
+    char *friendship_file_path = "Facil/Entrada/amizade.txt";
+    char *playlists_directory = "Facil/Entrada/";
+    char *playlist_file_path = "Facil/Entrada/playlists.txt";
+    char *output_refactored_playlists_directory = "Saida/";
+    char *output_refactored_list_file_path = "Saida/played-refatorada.txt";
+    // char *output_similarity_file_path = "../../Saida/similaridades.txt";
 
     txt_read_friendship(friendship_file_path, users_list);
     txt_read_playlists(playlist_file_path, playlists_directory, users_list);
