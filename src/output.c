@@ -72,7 +72,7 @@ void write_summary(List *users_list, char *output_summary_file_path)
         Playlist *playlist = NULL;
         while ((playlist = list_iterate(playlists, &prev_playlist)) != NULL)
         {
-            fprintf(output_file, ";%s", playlist_get_name(playlist));
+            fprintf(output_file, ";%s.txt", playlist_get_name(playlist));
         }
         fprintf(output_file, "\n");
     }

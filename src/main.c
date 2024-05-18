@@ -1,6 +1,6 @@
 #include "list.h"
 #include "input.h"
-#include "refactor.h"
+#include "playlist_operations.h"
 #include "output.h"
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +15,7 @@ int main()
     char *output_refactored_playlists_directory = "Saida/";
     char *output_summary_file_path = "Saida/played-refatorada.txt";
     char *output_similarity_file_path = "Saida/similaridades.txt";
+    char *output_merged_playlists_directory = "Saida/merged/";
 
     read_friendship(friendship_file_path, users_list);
     read_playlists(playlist_file_path, playlists_directory, users_list);
@@ -22,6 +23,8 @@ int main()
     write_playlists(users_list, output_refactored_playlists_directory);
     write_summary(users_list, output_summary_file_path);
     write_similarity(users_list, output_similarity_file_path);
+    merge_playlists(users_list);
+    write_playlists(users_list, output_merged_playlists_directory);
     
     return 0;
 }
