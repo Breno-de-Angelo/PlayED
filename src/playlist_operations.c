@@ -160,8 +160,17 @@ void merge_playlists_in_graph(List *graph)
             Playlist *playlist_found = song_find_by_artist(merged_playlists, playlist_get_name(playlist));
             if (playlist_found != NULL)
             {
-                list_remove(user_get_playlists(user), playlist);
-                list_append(user_get_playlists(user), playlist_found);
+                void *prev_song = NULL;
+                Song *song = NULL;
+                List *songs = playlist_get_songs(playlist_found);
+                while ((song = list_iterate(songs, &prev_song)) != NULL)
+                {
+                    if (song_find_by_name(playlist_get_songs(playlist), song) != NULL)
+                    {
+                        continue;
+                    }
+                    list_append(playlist_get_songs(playlist), song);
+                }
             }
         }
     }
