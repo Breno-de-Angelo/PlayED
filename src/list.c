@@ -16,6 +16,7 @@ struct List
 {
     Node *first;
     Node *last;
+    int length;
 };
 
 List *list_create()
@@ -23,6 +24,7 @@ List *list_create()
     List *list = malloc(sizeof(List));
     list->first = NULL;
     list->last = NULL;
+    list->length = 0;
     return list;
 }
 
@@ -35,16 +37,18 @@ void list_append(List *list, void *data)
         // Empty list
         list->first = list->last = node;
         node->prev = node->next = NULL;
+        list->length++;
         return;
     }
     // Non-empty list
     node->prev = list->last;
     node->next = NULL;
     list->last = list->last->next = node;
+    list->length++;
     return;
 }
 
-void list_private_iterator(List *list, int function(Node *node, void *data), void *data)
+int list_private_iterator(List *list, int function(Node *node, void *data), void *data)
 {
     Node *p = list->first;
     Node *aux = NULL;
@@ -54,9 +58,10 @@ void list_private_iterator(List *list, int function(Node *node, void *data), voi
         p = p->next;
         if (function(aux, data))
         {
-            return;
+            return 1;
         }
     }
+    return 0;
 }
 
 int list_delete_element(Node *node, void *data)
@@ -97,6 +102,7 @@ void list_remove(List *list, void *data)
             free(list->first);
             list->first = NULL;
             list->last = NULL;
+            list->length--;
             return;
         }
         return;
@@ -106,6 +112,7 @@ void list_remove(List *list, void *data)
         list->first = list->first->next;
         free(list->first->prev);
         list->first->prev = NULL;
+        list->length--;
         return;
     }
     if (list->last->data == data)
@@ -113,40 +120,37 @@ void list_remove(List *list, void *data)
         list->last = list->last->prev;
         free(list->last->next);
         list->last->next = NULL;
+        list->length--;
         return;
     }
-    list_private_iterator(list, list_remove_element, data);
-}
-
-void *list_iterator(List *list, void *function(void *element, void *data), void *data)
-{
-    Node *p = list->first;
-    Node *aux = NULL;
-    void *result;
-    while (p)
+    if (list_private_iterator(list, list_remove_element, data))
     {
-        aux = p;
-        p = p->next;
-        result = function(aux->data, data);
-        if (result != NULL)
-        {
-            return result;
-        }
+        list->length--;
     }
-    return NULL;
-}
-
-void *list_size_count(void *element, void *data)
-{
-    (void) element;
-    int *counter = (int *) data;
-    (*counter)++;
-    return NULL;
+    return;
 }
 
 int list_size(List *list)
 {
-    int counter = 0;
-    list_iterator(list, list_size_count, &counter);
-    return counter;
+    return list->length;
+}
+
+void *list_iterate(List *list, void **prev)
+{
+    Node *prev_node = (Node *) *prev;
+    if (list->first == NULL)
+    {
+        return NULL;
+    }
+    if (prev_node == NULL)
+    {
+        *prev = list->first;
+        return list->first->data;
+    }
+    if (prev_node->next == NULL)
+    {
+        return NULL;
+    }
+    *prev = prev_node->next;
+    return prev_node->next->data;
 }
