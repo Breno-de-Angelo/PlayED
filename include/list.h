@@ -1,8 +1,6 @@
 /**
  * @file list.h
  * @brief File containing the list data structure and its operations.
- * @author Breno Uliana de Angelo
- * @date 2024-18-05
  */
 
 #pragma once
