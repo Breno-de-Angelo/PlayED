@@ -212,3 +212,17 @@ void list_destroy(List *users_list)
     }
     list_delete(users_list);
 }
+
+int check_if_song_exists(List *songs, char *artist, char *song_name)
+{
+    void *prev_song = NULL;
+    Song *song = NULL;
+    while ((song = list_iterate(songs, &prev_song)) != NULL)
+    {
+        if (strcmp(artist, song_get_artist(song)) == 0 && strcmp(song_name, song_get_name(song)) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}

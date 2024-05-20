@@ -2,6 +2,7 @@
 #include "user.h"
 #include "song.h"
 #include "playlist.h"
+#include "playlist_operations.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -90,8 +91,6 @@ void read_playlist(List *list, char *playlists_directory, char *playlist_name)
     sprintf(file_path, "%s%s", playlists_directory, playlist_name);
     FILE *file = open_file(file_path, "r");
     char buffer[MAX_LINE_LENGTH];
-    char *token;
-    char *saveptr;
     char *artist;
     char *song;
 
@@ -100,11 +99,20 @@ void read_playlist(List *list, char *playlists_directory, char *playlist_name)
 
     while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL)
     {
-        token = strtok_r(buffer, "-", &saveptr);
-        remove_trailing_character(token, ' ');
-        artist = token;
-        token = strtok_r(NULL, "\n", &saveptr);
-        song = ++token;
+        song = strstr(buffer, " - ");
+        artist = buffer;
+        if (song == NULL)
+        {
+            exit(1);
+            continue;
+        }
+        remove_trailing_character(song, '\n');
+        song[0] = '\0';
+        song += 3;
+        if (!check_if_song_exists(playlist_get_songs(playlist), artist, song))
+        {
+            continue;
+        }
         list_append(playlist_get_songs(playlist), song_create(artist, song));
     }
     fclose(file);
