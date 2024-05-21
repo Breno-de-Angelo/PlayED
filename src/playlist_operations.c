@@ -157,23 +157,32 @@ void merge_playlists_in_graph(List *graph)
         Playlist *playlist = NULL;
         while ((playlist = list_iterate(merged_playlists, &prev_playlist)) != NULL)
         {
-            Playlist *playlist_found = song_find_by_artist(merged_playlists, playlist_get_name(playlist));
+            Playlist *playlist_found = song_find_by_artist(user_get_playlists(user), playlist_get_name(playlist));
             if (playlist_found != NULL)
             {
                 void *prev_song = NULL;
                 Song *song = NULL;
-                List *songs = playlist_get_songs(playlist_found);
+                List *songs = playlist_get_songs(playlist);
                 while ((song = list_iterate(songs, &prev_song)) != NULL)
                 {
-                    if (song_find_by_name(playlist_get_songs(playlist), song) != NULL)
+                    if (song_find_by_name(playlist_get_songs(playlist_found), song) != NULL)
                     {
                         continue;
                     }
-                    list_append(playlist_get_songs(playlist), song);
+                    Song *song_copy = song_create(song_get_artist(song), song_get_name(song));
+                    list_append(playlist_get_songs(playlist_found), song_copy);
                 }
             }
         }
     }
+
+    void *prev_playlist = NULL;
+    Playlist *playlist = NULL;
+    while ((playlist = list_iterate(merged_playlists, &prev_playlist)) != NULL)
+    {
+        playlist_delete(playlist);
+    }
+    list_delete(merged_playlists);
 }
 
 void merge_playlists(List *users_list)
@@ -184,6 +193,12 @@ void merge_playlists(List *users_list)
     while ((graph = list_iterate(disjoint_graphs, &prev_graph)) != NULL)
     {
         merge_playlists_in_graph(graph);
+    }
+    prev_graph = NULL;
+    graph = NULL;
+    while ((graph = list_iterate(disjoint_graphs, &prev_graph)) != NULL)
+    {
+        list_delete(graph);
     }
     list_delete(disjoint_graphs);
 }
